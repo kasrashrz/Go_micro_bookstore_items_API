@@ -1,14 +1,9 @@
 package main
 
-import "github.com/gorilla/mux"
-
-var (
-	router = mux.NewRouter()
+import (
+	"github.com/kasrashrz/Go_micro_bookstore_items_API/application"
 )
 
-func main(){
-
+func main() {
+	application.StartApplication()
 }
-
-
-
