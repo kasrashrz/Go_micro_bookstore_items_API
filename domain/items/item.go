@@ -9,6 +9,8 @@ type Item struct {
 	VideoPath         string      `json:"video_path"`
 	Price             float32     `json:"price"`
 	AvailableQuantity int         `json:"available_quantity"`
+	SoldQuantity      int         `json:"sold_quantity"`
+	Status            string      `json:"status"`
 }
 
 type Description struct {
