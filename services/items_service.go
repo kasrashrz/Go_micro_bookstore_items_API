@@ -5,6 +5,10 @@ import (
 	"github.com/kasrashrz/Go_micro_bookstore_items_API/domain/items"
 )
 
+var(
+	ItemsService itemsServiceInterface = &itemsService{}
+)
+
 type itemsServiceInterface interface {
 	Create(items.Item) (*items.Item, *errors.RestErr)
 	Get(string) (*items.Item, *errors.RestErr)
@@ -16,6 +20,6 @@ func (service itemsService) Create(item items.Item) (*items.Item, *errors.RestEr
 	return nil, nil
 }
 
-func (service itemsService) Get(itemName string) (*items.Item, **errors.RestErr) {
+func (service itemsService) Get(itemName string) (*items.Item, *errors.RestErr) {
 	return nil, nil
 }
