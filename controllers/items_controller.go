@@ -1,11 +1,13 @@
 package controllers
 
 import (
+	"encoding/json"
 	"github.com/kasrashrz/Go_micro_bookstore_OAth-go/oath"
 	"github.com/kasrashrz/Go_micro_bookstore_OAth-go/oath/errors"
 	"github.com/kasrashrz/Go_micro_bookstore_items_API/domain/items"
 	"github.com/kasrashrz/Go_micro_bookstore_items_API/services"
 	"github.com/kasrashrz/Go_micro_bookstore_items_API/utils/http_utils"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -30,15 +32,28 @@ func (controller *itemsController) Create(w http.ResponseWriter, request *http.R
 		http_utils.RespondError(w, &newErr)
 		return
 	}
-
-	item := items.Item{
-		Seller: oath.GetCallerId(request),
+	requestBody, err := ioutil.ReadAll(request.Body)
+	if err != nil {
+		respErr := errors.BadRequestError("invalid request body")
+		http_utils.RespondError(w, respErr)
+		return
 	}
 
-	result, err := services.ItemsService.Create(item)
+	defer request.Body.Close()
 
-	if err != nil {
-		http_utils.RespondError(w, err)
+	var itemRequest items.Item
+	if err := json.Unmarshal(requestBody, &itemRequest); err != nil {
+		respErr := errors.BadRequestError("invalid json body")
+		http_utils.RespondError(w, respErr)
+		return
+	}
+
+	itemRequest.Seller = oath.GetCallerId(request)
+
+	result, createErr := services.ItemsService.Create(itemRequest)
+
+	if createErr != nil {
+		http_utils.RespondError(w, createErr)
 		return
 	}
 
